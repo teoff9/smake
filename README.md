@@ -10,11 +10,12 @@ Smake will generate the makefile with the following available commands:
 * clean : remove the *.o and *.exe files created
 
 ## Usage
-In the same folder as file_name.cpp or writing /path/to/file_name.cpp
+Create the smake shell command using the smake shell file adding your path to smake in the release folder of the cargo project. In the same folder as file_name.cpp or writing /path/to/file_name.cpp
 
 `smake file_name.cpp`
 
 ## Future functions
+* Better make clean
 * Logging
 * Better error handling
 * Parameters involving the dependencies
