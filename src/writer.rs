@@ -3,31 +3,44 @@
 
 //imports
 use std::{
-    fs::File,
+    fs::OpenOptions,
     io::Write,
 };
 
-//functions
-pub fn generate_make_file(path: &String, file_name: &str, dependencies: &Vec<String>) {
-    //open file
-    let f_name = format!("{}/{}", path, "makefile");
-    let mut f =
-        File::create(&f_name).unwrap_or_else(|_| panic!("Smake error: failed to create {f_name}"));
+pub fn generate_make_file(path: &str, file_name: &str, dependencies: &Vec<String>) {
+    // Open the makefile in append mode
+    let make_name = format!("{}/{}", path, "makefile");
 
+    let mut f = match OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(&make_name)
+    {
+        Ok(f) => f,
+        Err(_) => {
+            println!("Smake error: failed to open or create the makefile in {path}");
+            return;
+        }
+    };
+
+    // Get the file name and dependencies
     let file_name = file_name.strip_suffix(".cpp").unwrap();
     let deps = generate_dependencies(dependencies);
     let comp_deps = generate_compile_dependencies(dependencies);
+
+    // Prepare the makefile content
     let content = format!(
-        "{file_name}: {file_name}.o {deps}
+        "{file_name}: {file_name}.o {deps}\n
 \tg++ {file_name}.o {deps} -o {file_name}.exe\n
-{file_name}.o: {file_name}.cpp
-\tg++ -c {file_name}.cpp -o {file_name}.o\n
-{comp_deps}
-clean:\n\trm *.o *.exe"
+{file_name}.o: {file_name}.cpp\n\
+\tg++ -c {file_name}.cpp -o {file_name}.o\n\
+{comp_deps}\nclean:\n\trm *.o *.exe {deps}\n
+"
     );
 
+    // Write the content to the file, appending to it
     f.write_all(content.as_bytes())
-        .unwrap_or_else(|_| panic!("Smake error: failed to write to file {f_name}"));
+        .unwrap_or_else(|_| panic!("Smake error: failed to write to file {make_name}"));
 }
 
 fn generate_dependencies(deps: &[String]) -> String {
