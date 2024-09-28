@@ -40,6 +40,7 @@ Write in a shell session, for now (v0.0.n) smake will accept only one program:
 `smake relative/path/to/file_name.cpp`
 
 ## Future functions
-* Better error handling
+* Better error handling & better logic 
+* Rewrite with clap
 * Being able to update a makefile
 * Parameters involving the dependencies
