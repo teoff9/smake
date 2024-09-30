@@ -63,9 +63,9 @@ fn main() {
                                     println!(
                                         "Smake error: couldn't find the dependency: {} .h or .cpp file.",
                                         dependecies[j]
-                                    );}
-                                    return;
-                                
+                                    );
+                                }
+                                return;
                             }
 
                             //generate the Makefile

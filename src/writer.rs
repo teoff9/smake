@@ -2,10 +2,7 @@
 // Functions to write the Makefile
 
 //imports
-use std::{
-    fs::OpenOptions,
-    io::Write,
-};
+use std::{fs::OpenOptions, io::Write};
 
 pub fn generate_make_file(path: &str, file_name: &str, dependencies: &Vec<String>) {
     // Open the makefile in append mode
@@ -30,11 +27,11 @@ pub fn generate_make_file(path: &str, file_name: &str, dependencies: &Vec<String
 
     // Prepare the makefile content
     let content = format!(
-        "{file_name}: {file_name}.o {deps}\n
-\tg++ {file_name}.o {deps} -o {file_name}.exe\n
+        "{file_name}: {file_name}.o {deps}
+\tg++ {file_name}.o {deps} -o {file_name}\n
 {file_name}.o: {file_name}.cpp\n\
 \tg++ -c {file_name}.cpp -o {file_name}.o\n\
-{comp_deps}\nclean:\n\trm *.o *.exe {deps}\n
+{comp_deps}\nclean:\n\trm *.o {file_name} {deps}\n
 "
     );
 

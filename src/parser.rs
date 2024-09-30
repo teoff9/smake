@@ -42,7 +42,7 @@ pub fn check_for_dep_existance(
     fails_i: &mut Vec<usize>,
 ) -> bool {
     let mut flag = true;
-    for (i,dp) in dependencies.iter().enumerate() {
+    for (i, dp) in dependencies.iter().enumerate() {
         if !Path::new(&format!("{}/{}.h", rel_path, dp)).exists()
             && !Path::new(&format!("{}/{}.cpp", rel_path, dp)).exists()
         {
