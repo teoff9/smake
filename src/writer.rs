@@ -31,7 +31,7 @@ pub fn generate_make_file(path: &str, file_name: &str, dependencies: &Vec<String
 \tg++ {file_name}.o {deps} -o {file_name}\n
 {file_name}.o: {file_name}.cpp\n\
 \tg++ -c {file_name}.cpp -o {file_name}.o\n\
-{comp_deps}\nclean:\n\trm *.o {file_name} {deps}\n
+{comp_deps}\nclean:\n\trm {deps}\n\trm *.o {file_name}\n
 "
     );
 

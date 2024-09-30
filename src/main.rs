@@ -42,7 +42,7 @@ fn main() {
                         let rel_path = match p.parent() {
                             Some(t) => t.to_str().unwrap(),
                             None => {
-                                println!("Smake error: failed to get file name.");
+                                println!("Smake error: failed to get parent folder of file name.");
                                 return;
                             }
                         };
