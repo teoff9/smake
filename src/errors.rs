@@ -13,6 +13,6 @@ pub enum SmakeError {
     #[error("Invalid <FILE_NAME>: {0} is not a .cpp file.")]
     InvalidFile(String),
 
-    #[error("{0}")]
-    InternalError(String),
+    #[error("Invalid <COMPILER>: {0} not valid, choose between 'gcc' and 'g++'.")]
+    InvalidCompiler(String),
 }

@@ -10,12 +10,14 @@ use smake::file_io::file_checks::check_file;
 use smake::file_io::parser::parse_cpp_file;
 
 fn main() -> anyhow::Result<()> {
-        //parse the arguments and get the current directory
+        //parse the arguments
         let args = Args::parse();
 
         //check the validity of Args.file_name then create the relative path from current dir
         let target: PathBuf = check_file(&args.file_name, ".cpp")?;
         let curr_dir: PathBuf = current_dir()?;
+
+        //TODO: choose the compiler, additional arguments, also for c files
     
         //parse the target to get the dependencies
         
