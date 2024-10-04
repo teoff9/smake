@@ -14,29 +14,22 @@ use args::Args;
 use clap::Parser;
 use file_checks::check_file;
 use parser::parse_cpp_file;
-use std::{env::current_dir, error::Error, path::PathBuf};
+use std::{env::current_dir,  path::PathBuf};
 
-//this is done because the errors weren't printed correctly!!
-fn main() {
-    if let Err(e) = run() {
-        eprintln!("Error: {}", e);
-        std::process::exit(-1);
-    }
-}
+fn main() -> anyhow::Result<()> {
+        //parse the arguments and get the current directory
+        let args = Args::parse();
+        let curr_dir: PathBuf = current_dir()?;
 
-fn run() -> Result<(), Box<dyn Error>> {
-    //parse the arguments and get the current directory
-    let args = Args::parse();
-    let curr_dir: PathBuf = current_dir()?.canonicalize()?;
-
-    //check the validity of Args.file_name then create the relative path from current dir
-    let target: PathBuf = check_file(&args.file_name, ".cpp")?;
-
-    //parse the target to get the dependencies
+        //check the validity of Args.file_name then create the relative path from current dir
+        let target: PathBuf = check_file(&args.file_name, ".cpp")?;
     
-    //write the makefile
+        //parse the target to get the dependencies
+        
+        //write the makefile
+    
+        //tell the output
+    
+        Ok(())
+    }
 
-    //tell the output
-
-    Ok(())
-}

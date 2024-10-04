@@ -7,12 +7,12 @@ use thiserror::Error;
 //define the errors
 #[derive(Debug, Error)]
 pub enum SmakeError {
-    #[error("Invalid <FILE_NAME>: {0:?} is not a valid path.")]
+    #[error("Invalid <FILE_NAME>: {0} is not a valid path.")]
     InvalidPath(String),
 
-    #[error("Invalid <FILE_NAME>: {0:?} is not a .cpp file.")]
+    #[error("Invalid <FILE_NAME>: {0} is not a .cpp file.")]
     InvalidFile(String),
 
-    #[error("smake error: {0:?}")]
+    #[error("{0}")]
     InternalError(String),
 }

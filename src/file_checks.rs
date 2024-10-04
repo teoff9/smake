@@ -10,7 +10,7 @@ pub fn check_file(path_to_file: &str, suffix: &str) -> Result<PathBuf, SmakeErro
     let p = Path::new(path_to_file);
     if !p.exists() {
         Err(SmakeError::InvalidPath(path_to_file.to_owned()))
-    } else if !p.ends_with(suffix) {
+    } else if !p.ends_with(suffix) && p.is_file() {
         Err(SmakeError::InvalidFile(path_to_file.to_owned()))
     } else {
         Ok(p.to_path_buf())
