@@ -2,27 +2,20 @@
 //Simple Make : https://github.com/teoff9/smake.git
 //Simple Make : generates a Makefile from a single cpp file.
 
-//Mods
-pub mod args;
-pub mod errors;
-pub mod file_checks;
-pub mod parser;
-pub mod writer;
-
 //Imports
-use args::Args;
-use clap::Parser;
-use file_checks::check_file;
-use parser::parse_cpp_file;
 use std::{env::current_dir,  path::PathBuf};
+use clap::Parser;
+use smake::args::Args;
+use smake::file_io::file_checks::check_file;
+use smake::file_io::parser::parse_cpp_file;
 
 fn main() -> anyhow::Result<()> {
         //parse the arguments and get the current directory
         let args = Args::parse();
-        let curr_dir: PathBuf = current_dir()?;
 
         //check the validity of Args.file_name then create the relative path from current dir
         let target: PathBuf = check_file(&args.file_name, ".cpp")?;
+        let curr_dir: PathBuf = current_dir()?;
     
         //parse the target to get the dependencies
         
