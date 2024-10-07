@@ -17,10 +17,11 @@ pub struct Args {
     //Additional compiler arguments
     #[arg(
         long,
-        default_value = "",
-        help = "Additional compiler arguments used every time the choosen compiler is called in the makefile."
+        num_args=0..,
+        value_delimiter=',',
+        help = "Additional compiler arguments used every time the choosen compiler is called in the makefile.\nFor multiple arguments: \"arg1, arg2...\""
     )]
-    pub args: String,
+    pub args: Vec<String>,
 
     //Compiler choice between gcc and g++
     #[arg(long, short, default_value="g++",value_parser=parse_compiler, help="Choose between gcc and g++ compilers.")]

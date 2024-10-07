@@ -23,10 +23,10 @@ pub fn parse_cpp_file(target: &Path) -> Result<Vec<PathBuf>, SmakeError> {
     //search for the dependencies
     let mut deps: Vec<PathBuf> = vec![];
     let lib_regex = Regex::new(r#""([^"]+\.h)""#).expect("Can't unwrap regex");
-    for line in f.lines().map(|l| l.trim().replace(" ", "")).into_iter() {
+    for line in f.lines().map(|l| l.trim().replace(" ", "")) {
         if line.starts_with("#include") {
             line.replace("#include", "").split(",").for_each(|lib| {
-                if let Some(e) = get_lib(&lib, &lib_regex) {
+                if let Some(e) = get_lib(lib, &lib_regex) {
                     deps.push(e);
                 }
             });

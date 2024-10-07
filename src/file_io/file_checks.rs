@@ -16,7 +16,7 @@ pub fn check_target(args: &Args) -> Result<PathBuf, SmakeError> {
             .extension()
             .ok_or_else(|| SmakeError::InvalidFile(args.target.to_owned()))?;
         if e == "c" {
-            return Ok(p.to_path_buf());
+            Ok(p.to_path_buf())
         } else if e == "cpp" {
             match args.compiler {
                 Compiler::Gcc => Err(SmakeError::InvalidChoice {

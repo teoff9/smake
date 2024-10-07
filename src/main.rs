@@ -12,13 +12,19 @@ use std::path::PathBuf;
 fn main() -> anyhow::Result<()> {
     //parse the arguments
     let args = Args::parse();
-
+    dbg!(&args.args);
     //check the validity of Args.file_name
     let target: PathBuf = check_target(&args)?.canonicalize()?;
 
     //parse the target to get the dependencies of target
-    let deps = parse_cpp_file(&target)?;
-    dbg!(deps);
+    let deps_h = parse_cpp_file(&target)?;
+    println!(" => Parsed {:?}: found {} dependencies...", args.target, deps_h.len());
+
+    //search for the .h files (if not found remove from deps alerting the user)
+    
+    
+    //if found, parse the .cpp files of the deps to get their depencencies, add them to deps if not already there
+    //NOTE: this assumes the .cpp source files are in the same directory as the headers!!
 
     //write the makefile
 
