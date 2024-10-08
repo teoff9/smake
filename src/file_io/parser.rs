@@ -2,15 +2,15 @@
 // Functions to parse files
 
 //Imports
-use crate::errors::SmakeError;
+use crate::{dep::Dependecy, errors::SmakeError};
 use regex::Regex;
 use std::{
     fs::read_to_string,
     path::{Path, PathBuf},
 };
 
-//Parse a .cpp file
-pub fn parse_cpp_file(target: &Path) -> Result<Vec<PathBuf>, SmakeError> {
+//Parse a .cpp or .c file
+pub fn parse_cpp_file(target: &Path) -> Result<Vec<Dependecy>, SmakeError> {
     //open the file and load it to a string removing the commented blocks
     let f = remove_commented_blocks(&read_to_string(target).map_err(|_| {
         SmakeError::CantOpenFile(
@@ -21,13 +21,13 @@ pub fn parse_cpp_file(target: &Path) -> Result<Vec<PathBuf>, SmakeError> {
         )
     })?);
     //search for the dependencies
-    let mut deps: Vec<PathBuf> = vec![];
+    let mut deps: Vec<Dependecy> = vec![];
     let lib_regex = Regex::new(r#""([^"]+\.h)""#).expect("Can't unwrap regex");
     for line in f.lines().map(|l| l.trim().replace(" ", "")) {
         if line.starts_with("#include") {
             line.replace("#include", "").split(",").for_each(|lib| {
                 if let Some(e) = get_lib(lib, &lib_regex) {
-                    deps.push(e);
+                    deps.push(Dependecy::from(&e));
                 }
             });
         }
@@ -35,6 +35,7 @@ pub fn parse_cpp_file(target: &Path) -> Result<Vec<PathBuf>, SmakeError> {
     Ok(deps)
 }
 
+//remove the commented blocks of a file
 pub fn remove_commented_blocks(f: &str) -> String {
     let blocks_regex = Regex::new(r"/\*[\s\S]*?\*/").expect("Can't unwrap regex");
     blocks_regex.replace_all(f, "").to_string().to_owned()
@@ -48,6 +49,27 @@ pub fn get_lib(lib: &str, regex: &Regex) -> Option<PathBuf> {
         }
     }
     None
+}
+
+//search the source files of deps_h in the same folder as the header
+//if found, parse it and add it's dependencies to the list
+pub fn search_and_parse_sources(deps_h: &mut Vec<Dependecy>,dir: &Path,verbose: bool) -> Result<(), SmakeError> {
+    for d in deps_h {
+        let source_deps = parse_cpp_file(&dir.join(&d.name).with_extension("cpp"))?;
+        for sd in &source_deps {
+            if sd.name != d.name {
+                d.add_dependency(&sd.name);
+            }
+        }
+        if verbose && source_deps.len() != 0 {
+            println!(
+                " => Parsed {}: found {} unique dependecies.",
+                d.name.with_extension("cpp").display(),
+                &d.dependencies.as_ref().unwrap().len()
+            )
+        }
+    }
+    Ok(())
 }
 
 //Parse a makefile

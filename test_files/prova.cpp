@@ -38,6 +38,7 @@
 
         // Last comment
         // #include "should_not_include.h" - this is commented out
+#include "stats.h"
     
 
 using namespace std;

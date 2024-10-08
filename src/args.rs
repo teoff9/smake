@@ -26,6 +26,15 @@ pub struct Args {
     //Compiler choice between gcc and g++
     #[arg(long, short, default_value="g++",value_parser=parse_compiler, help="Choose between gcc and g++ compilers.")]
     pub compiler: Compiler,
+
+    //Verbose: prints what is doing..
+    #[arg(
+        long,
+        short,
+        default_value = "false",
+        help = "Verbose mode: prints what is doing."
+    )]
+    pub verbose: bool,
 }
 
 #[derive(ValueEnum, Clone, Copy, Debug)]

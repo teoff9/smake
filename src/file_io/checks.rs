@@ -1,8 +1,9 @@
 //03/10/24 by Matteo Fava
-//Functions to check
+//Functions to check file existance and stuff
 
 //Imports
 use crate::args::{Args, Compiler};
+use crate::dep::Dependecy;
 use crate::errors::SmakeError;
 use std::path::{Path, PathBuf};
 
@@ -29,4 +30,21 @@ pub fn check_target(args: &Args) -> Result<PathBuf, SmakeError> {
             Err(SmakeError::InvalidFile(args.target.to_owned()))
         }
     }
+}
+
+//Function to check if dependencies exists, if one doesn't remove it
+pub fn resolve_deps_h(deps_h: &mut Vec<Dependecy>, dir: &Path, verbose: bool) {
+    deps_h.retain(|e| {
+        if !dir.join(&e.name).exists() {
+            if verbose {
+                println!(
+                    " => Couldn't find: \"{}\". It won't be included in the makefile.",
+                    e.name.display()
+                );
+            }
+            false
+        } else {
+            true
+        }
+    });
 }

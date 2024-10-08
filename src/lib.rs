@@ -6,3 +6,6 @@ pub mod errors;
 
 //File input / output
 pub mod file_io;
+
+//Definition and methods of Dependecy
+pub mod dep;
