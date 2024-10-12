@@ -54,21 +54,7 @@ pub fn get_lib(lib: &str, regex: &Regex) -> Option<PathBuf> {
 //search the source files of deps_h in the same folder as the header
 //if found, parse it and add it's dependencies to the list
 pub fn search_and_parse_sources(deps_h: &mut Vec<Dependecy>,dir: &Path,verbose: bool) -> Result<(), SmakeError> {
-    for d in deps_h {
-        let source_deps = parse_cpp_file(&dir.join(&d.name).with_extension("cpp"))?;
-        for sd in &source_deps {
-            if sd.name != d.name {
-                d.add_dependency(&sd.name);
-            }
-        }
-        if verbose && source_deps.len() != 0 {
-            println!(
-                " => Parsed {}: found {} unique dependecies.",
-                d.name.with_extension("cpp").display(),
-                &d.dependencies.as_ref().unwrap().len()
-            )
-        }
-    }
+    todo!();
     Ok(())
 }
 

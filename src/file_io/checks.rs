@@ -33,8 +33,8 @@ pub fn check_target(args: &Args) -> Result<PathBuf, SmakeError> {
 }
 
 //Function to check if dependencies exists, if one doesn't remove it
-pub fn resolve_deps_h(deps_h: &mut Vec<Dependecy>, dir: &Path, verbose: bool) {
-    deps_h.retain(|e| {
+pub fn resolve_deps(deps: &mut Vec<Dependecy>, dir: &Path, verbose: bool) {
+    deps.retain(|e| {
         if !dir.join(&e.name).exists() {
             if verbose {
                 println!(
