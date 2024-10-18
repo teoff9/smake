@@ -16,9 +16,9 @@ pub fn check_target(args: &Args) -> Result<PathBuf, SmakeError> {
         let e = p
             .extension()
             .ok_or_else(|| SmakeError::InvalidFile(args.target.to_owned()))?;
-        if e == "c" {
+        if e.to_ascii_lowercase() == "c" {
             Ok(p.to_path_buf())
-        } else if e == "cpp" {
+        } else if e.to_ascii_lowercase() == "cpp" {
             match args.compiler {
                 Compiler::Gcc => Err(SmakeError::InvalidChoice {
                     target: args.target.to_owned(),
@@ -33,18 +33,22 @@ pub fn check_target(args: &Args) -> Result<PathBuf, SmakeError> {
 }
 
 //Function to check if dependencies exists, if one doesn't remove it
-pub fn resolve_deps(deps: &mut Vec<Dependecy>, dir: &Path, verbose: bool) {
-    deps.retain(|e| {
-        if !dir.join(&e.name).exists() {
+pub fn resolve_deps(deps: &mut Vec<Dependecy>, dir: &Path, verbose: bool) -> anyhow::Result<()>{
+    for d in deps.iter_mut() {
+        if dir.join(&d.name).exists() {
+            d.set_abs_path(dir.join(&d.name))?;
+        }
+    }
+    deps.retain(|d| {
+        if d.absolute_path == None {
             if verbose {
                 println!(
                     " => Couldn't find: \"{}\". It won't be included in the makefile.",
-                    e.name.display()
+                    d.name.display()
                 );
             }
             false
-        } else {
-            true
-        }
+        } else {true}
     });
+    Ok(())
 }

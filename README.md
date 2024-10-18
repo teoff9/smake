@@ -1,3 +1,5 @@
 ##TODO:
 
-cambia tutto! Devi cambiare la logica delle dependency! secondo me puoi fare una struct per target: target name, dir, dependencies.
+- rimuovi found source
+- aggiungi path relativo (quello trovato) e quello assoluto a Dependency -> cambia tutto
+- fai funzione ricorsiva

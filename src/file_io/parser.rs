@@ -10,7 +10,7 @@ use std::{
 };
 
 //Parse a .cpp or .c file
-pub fn parse_cpp_file(target: &Path) -> Result<Vec<Dependecy>, SmakeError> {
+pub fn parse_cpp_file(target: &Path) -> anyhow::Result<Vec<Dependecy>> {
     //open the file and load it to a string removing the commented blocks
     let f = remove_commented_blocks(&read_to_string(target).map_err(|_| {
         SmakeError::CantOpenFile(
@@ -25,11 +25,11 @@ pub fn parse_cpp_file(target: &Path) -> Result<Vec<Dependecy>, SmakeError> {
     let lib_regex = Regex::new(r#""([^"]+\.h)""#).expect("Can't unwrap regex");
     for line in f.lines().map(|l| l.trim().replace(" ", "")) {
         if line.starts_with("#include") {
-            line.replace("#include", "").split(",").for_each(|lib| {
+            for lib in line.replace("#include", "").split(",") {
                 if let Some(e) = get_lib(lib, &lib_regex) {
-                    deps.push(Dependecy::from(&e));
+                    deps.push(Dependecy::from(&e, None));
                 }
-            });
+            }
         }
     }
     Ok(deps)
@@ -51,14 +51,15 @@ pub fn get_lib(lib: &str, regex: &Regex) -> Option<PathBuf> {
     None
 }
 
-//search the source files of deps_h in the same folder as the header
+//search the source files of deps in the same folder as the header
 //if found, parse it and add it's dependencies to the list
-pub fn search_and_parse_sources(deps_h: &mut Vec<Dependecy>,dir: &Path,verbose: bool) -> Result<(), SmakeError> {
+pub fn search_and_parse_dependecies(deps: &mut Vec<Dependecy>,dir: &Path, verbose: bool) -> Result<(), anyhow::Error> {
     todo!();
+
     Ok(())
 }
 
-//Parse a makefile
-pub fn parse_makefile() -> Result<String, SmakeError> {
+//Recursive function: explore the dependency of a file
+pub fn explore_deps(d: &Dependecy, dir: &Path, exp: &mut Vec<Dependecy>) {
     todo!()
 }

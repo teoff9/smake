@@ -6,7 +6,7 @@
 use clap::Parser;
 use smake::args::Args;
 use smake::file_io::checks::{check_target, resolve_deps};
-use smake::file_io::parser::{parse_cpp_file, search_and_parse_sources};
+use smake::file_io::parser::{parse_cpp_file, search_and_parse_dependecies};
 use std::{env::current_dir, path::PathBuf};
 
 fn main() -> anyhow::Result<()> {
@@ -34,11 +34,10 @@ fn main() -> anyhow::Result<()> {
     }
 
     //search for the .h files (if not found remove from deps alerting the user)
-    resolve_deps(&mut deps, &dir, args.verbose);
+    resolve_deps(&mut deps, &dir, args.verbose)?;
 
-    //search the source files of deps_h in the same folder as the header
-    //if found, parse it and add it's dependencies to the list
-    search_and_parse_sources(&mut deps, &dir, args.verbose)?;
+    //Search the dependecies for their dependencies: recursive function 
+    search_and_parse_dependecies(&mut deps, &dir, args.verbose)?;
 
     //write the makefile
 
