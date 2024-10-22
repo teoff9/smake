@@ -6,7 +6,8 @@
 use clap::Parser;
 use smake::args::Args;
 use smake::file_io::checks::{check_target, resolve_deps};
-use smake::file_io::parser::{parse_cpp_file, search_and_parse_dependecies};
+use smake::file_io::parser::parse_cpp_file;
+use smake::file_io::writer::write_makefile;
 use std::{env::current_dir, path::PathBuf};
 
 fn main() -> anyhow::Result<()> {
@@ -36,12 +37,8 @@ fn main() -> anyhow::Result<()> {
     //search for the .h files (if not found remove from deps alerting the user)
     resolve_deps(&mut deps, &dir, args.verbose)?;
 
-    //Search the dependecies for their dependencies: recursive function 
-    search_and_parse_dependecies(&mut deps, &dir, args.verbose)?;
-
     //write the makefile
-
-    //tell the output
+    write_makefile(&target, &dir, &deps)?;
 
     Ok(())
 }

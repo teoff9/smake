@@ -50,16 +50,3 @@ pub fn get_lib(lib: &str, regex: &Regex) -> Option<PathBuf> {
     }
     None
 }
-
-//search the source files of deps in the same folder as the header
-//if found, parse it and add it's dependencies to the list
-pub fn search_and_parse_dependecies(deps: &mut Vec<Dependecy>,dir: &Path, verbose: bool) -> Result<(), anyhow::Error> {
-    todo!();
-
-    Ok(())
-}
-
-//Recursive function: explore the dependency of a file
-pub fn explore_deps(d: &Dependecy, dir: &Path, exp: &mut Vec<Dependecy>) {
-    todo!()
-}
