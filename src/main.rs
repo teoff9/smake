@@ -1,12 +1,13 @@
 // 26/09/2024 by Matteo Fava (teoff9)
 //Simple Make : https://github.com/teoff9/smake.git
-//Simple Make : generates a Makefile from a single cpp file.
+//Simple Make : generates a Makefile from a single cpp/c file.
 
 //Imports
 use clap::Parser;
 use smake::args::Args;
 use smake::file_io::checks::{check_target, resolve_deps};
 use smake::file_io::parser::{parse_cpp_file, search_and_parse_dependecies};
+use smake::file_io::writer::write_makefile;
 use std::{env::current_dir, path::PathBuf};
 
 fn main() -> anyhow::Result<()> {
@@ -20,7 +21,7 @@ fn main() -> anyhow::Result<()> {
     let dir: PathBuf = current_dir()?.join(
         target
             .parent()
-            .expect("Can't get parent directory of target.")
+            .expect("Can't get parent directory of target."),
     );
 
     //parse the target to get the dependencies of target
@@ -36,10 +37,11 @@ fn main() -> anyhow::Result<()> {
     //search for the .h files (if not found remove from deps alerting the user)
     resolve_deps(&mut deps, &dir, args.verbose)?;
 
-    //Search the dependecies for their dependencies: recursive function 
+    //Search the dependecies for their dependencies: recursive function
     search_and_parse_dependecies(&mut deps, &dir, args.verbose)?;
 
     //write the makefile
+    write_makefile(&deps, &dir, args.verbose)?;
 
     //tell the output
 

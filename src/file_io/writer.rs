@@ -2,3 +2,10 @@
 // Functions to write the Makefile
 
 //Imports
+use crate::dep::Dependecy;
+use std::path::Path;
+
+//write the makefile
+pub fn write_makefile(deps: &Vec<Dependecy>, dir: &Path, verbose: bool) -> anyhow::Result<()> {
+    todo!()
+}

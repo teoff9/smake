@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 pub struct Dependecy {
     pub name: PathBuf,
     pub found_source: bool,
-    pub absolute_path: Option<PathBuf>
+    pub absolute_path: Option<PathBuf>,
 }
 
 impl Dependecy {
@@ -16,10 +16,12 @@ impl Dependecy {
         Self {
             name: PathBuf::from(name),
             found_source,
-            absolute_path: {match absolute_path {
-                Some(e) => Some(e.to_path_buf()),
-                _ => None
-            }}
+            absolute_path: {
+                match absolute_path {
+                    Some(e) => Some(e.to_path_buf()),
+                    _ => None,
+                }
+            },
         }
     }
 
@@ -27,15 +29,19 @@ impl Dependecy {
         Self {
             name: PathBuf::from(name),
             found_source: false,
-            absolute_path: {match absolute_path {
-                Some(e) => Some(e.to_path_buf()),
-                _ => None
-            }}
+            absolute_path: {
+                match absolute_path {
+                    Some(e) => Some(e.to_path_buf()),
+                    _ => None,
+                }
+            },
         }
     }
 
     pub fn search_source(&mut self, dir: &Path) -> bool {
-        if dir.join(self.name.with_extension("cpp")).exists() || dir.join(self.name.with_extension("c")).exists() {
+        if dir.join(self.name.with_extension("cpp")).exists()
+            || dir.join(self.name.with_extension("c")).exists()
+        {
             self.found_source = true;
             return true;
         }
