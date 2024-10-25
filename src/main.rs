@@ -5,7 +5,7 @@
 //Imports
 use clap::Parser;
 use smake::args::Args;
-use smake::file_io::checks::{check_target, resolve_deps};
+use smake::file_io::checks::{check_target, find_sources, resolve_deps};
 use smake::file_io::parser::parse_cpp_file;
 use smake::file_io::writer::write_makefile;
 use std::{env::current_dir, path::PathBuf};
@@ -21,7 +21,7 @@ fn main() -> anyhow::Result<()> {
     let dir: PathBuf = current_dir()?.join(
         target
             .parent()
-            .expect("Can't get parent directory of target.")
+            .expect("Can't get parent directory of target."),
     );
 
     //parse the target to get the dependencies of target
@@ -37,8 +37,13 @@ fn main() -> anyhow::Result<()> {
     //search for the .h files (if not found remove from deps alerting the user)
     resolve_deps(&mut deps, &dir, args.verbose)?;
 
+    //search sources
+    find_sources(&mut deps, &dir, args.verbose)?;
+
     //write the makefile
-    write_makefile(&target, &dir, &deps)?;
+    write_makefile(&target, &dir, &deps, args.compiler, &args.args)?;
+
+    println!(" \n => CREATED makefile in {}", dir.display());
 
     Ok(())
 }

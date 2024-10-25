@@ -25,11 +25,11 @@ pub fn parse_cpp_file(target: &Path) -> anyhow::Result<Vec<Dependecy>> {
     let lib_regex = Regex::new(r#""([^"]+\.h)""#).expect("Can't unwrap regex");
     for line in f.lines().map(|l| l.trim().replace(" ", "")) {
         if line.starts_with("#include") {
-            for lib in line.replace("#include", "").split(",") {
+            line.replace("#include", "").split(",").for_each(|lib| {
                 if let Some(e) = get_lib(lib, &lib_regex) {
                     deps.push(Dependecy::from(&e, None));
                 }
-            }
+            });
         }
     }
     Ok(deps)

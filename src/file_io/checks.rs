@@ -33,14 +33,14 @@ pub fn check_target(args: &Args) -> Result<PathBuf, SmakeError> {
 }
 
 //Function to check if dependencies exists, if one doesn't remove it
-pub fn resolve_deps(deps: &mut Vec<Dependecy>, dir: &Path, verbose: bool) -> anyhow::Result<()>{
+pub fn resolve_deps(deps: &mut Vec<Dependecy>, dir: &Path, verbose: bool) -> anyhow::Result<()> {
     for d in deps.iter_mut() {
         if dir.join(&d.name).exists() {
             d.set_abs_path(dir.join(&d.name))?;
         }
     }
     deps.retain(|d| {
-        if d.absolute_path == None {
+        if d.absolute_path.is_none() {
             if verbose {
                 println!(
                     " => Couldn't find: \"{}\". It won't be included in the makefile.",
@@ -48,7 +48,23 @@ pub fn resolve_deps(deps: &mut Vec<Dependecy>, dir: &Path, verbose: bool) -> any
                 );
             }
             false
-        } else {true}
+        } else {
+            true
+        }
     });
+    Ok(())
+}
+
+pub fn find_sources(deps: &mut [Dependecy], dir: &Path, verbose: bool) -> anyhow::Result<()> {
+    for d in deps.iter_mut() {
+        if d.search_source(dir) && verbose {
+            println!(
+                " => Found {} : source of {}. It will be included in the makefile.",
+                d.source.as_ref().unwrap().display(),
+                d.name.display()
+            )
+        }
+    }
+
     Ok(())
 }
