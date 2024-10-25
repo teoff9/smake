@@ -2,83 +2,48 @@
 //Simple Make : https://github.com/teoff9/smake.git
 //Simple Make : generates a Makefile from a single cpp file.
 
-//Mods
-//pub mod logging;
-pub mod parser;
-pub mod writer;
-
 //Imports
-use parser::{check_for_dep_existance, parse_file};
-use std::env::args;
-use std::path::Path;
-use writer::generate_make_file;
+use clap::Parser;
+use smake::args::Args;
+use smake::file_io::checks::{check_target, find_sources, resolve_deps};
+use smake::file_io::parser::parse_cpp_file;
+use smake::file_io::writer::write_makefile;
+use std::{env::current_dir, path::PathBuf};
 
-fn main() {
-    //collect the args
-    // arg 0 is the executable
-    // arg 1 is the path given by smake shell command
-    // arg n with n>1 are the files
-    let args: Vec<String> = args().collect();
+fn main() -> anyhow::Result<()> {
+    //parse the arguments
+    let args = Args::parse();
 
-    if args.len() < 3 {
-        println!("Smake error: no arguments given. Try: smake file_name.cpp")
-    } else if args.len() > 3 {
-        println!("Smake error: for version v0.0.1, smake will accept just one file! Sorry!");
-    } else {
-        for i in 2..args.len() {
-            let p = Path::new(&args[i]);
-            if !p.exists() {
-                println!("Smake error: {} is an invalid path", args[i]);
-            } else if p.is_file() {
-                if let Some(ext) = p.extension().and_then(|e| e.to_str()) {
-                    if ext == "cpp" {
-                        let target_name = match p.file_name() {
-                            Some(t) => t.to_str().unwrap(),
-                            None => {
-                                println!("Smake error: failed to get file name.");
-                                return;
-                            }
-                        };
-                        let rel_path = match p.parent() {
-                            Some(t) => t.to_str().unwrap(),
-                            None => {
-                                println!("Smake error: failed to get parent folder of file name.");
-                                return;
-                            }
-                        };
-                        let path = format!("{}/{}", args[1], rel_path);
+    //check the validity of Args.file_name
+    let target: PathBuf = check_target(&args)?;
 
-                        //parse the file to get the dependecies
-                        let dependecies: Vec<String> =
-                            parse_file(&format!("{}/{}", path, target_name));
+    //find the absolute path to the directory containing target
+    let dir: PathBuf = current_dir()?.join(
+        target
+            .parent()
+            .expect("Can't get parent directory of target."),
+    );
 
-                        //check if the file has dependecies
-                        if dependecies.is_empty() {
-                            println!("Smake message: No dependecy found in {}, proceeding creating the makefile..", args[i]);
-                        } else {
-                            let mut fails_i: Vec<usize> = vec![];
-                            //check the existance of libs headers and cpp file in destination
-                            if !check_for_dep_existance(&path, &dependecies, &mut fails_i) {
-                                for j in fails_i {
-                                    println!(
-                                        "Smake error: couldn't find the dependency: {} .h or .cpp file.",
-                                        dependecies[j]
-                                    );
-                                }
-                                return;
-                            }
-
-                            //generate the Makefile
-                            generate_make_file(&path, target_name, &dependecies);
-                            println!("Smake created makefile in {}", path);
-                        }
-                    } else {
-                        println!("Smake error: {} is not a cpp file.", args[i]);
-                    }
-                }
-            } else {
-                println!("Smake error: {} doesn't lead to cpp file.", args[i]);
-            }
-        }
+    //parse the target to get the dependencies of target
+    let mut deps = parse_cpp_file(&target)?;
+    if args.verbose {
+        println!(
+            " => Parsed {:?}: found {} dependencies...",
+            args.target,
+            deps.len()
+        );
     }
+
+    //search for the .h files (if not found remove from deps alerting the user)
+    resolve_deps(&mut deps, &dir, args.verbose)?;
+
+    //search sources
+    find_sources(&mut deps, &dir, args.verbose)?;
+
+    //write the makefile
+    write_makefile(&target, &dir, &deps, args.compiler, &args.args)?;
+
+    println!(" \n => CREATED makefile in {}", dir.display());
+
+    Ok(())
 }
