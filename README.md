@@ -31,7 +31,7 @@ Ensure that [Rust](https://www.rust-lang.org/tools/install) is installed. You’
 3. **Install it**
     Write in the terminal 
     ```bash 
-    cargo install smake
+    cargo install
 
 Check that the cargo bin folder is added to your $PATH !! and enjoy
 
