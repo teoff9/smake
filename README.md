@@ -1,12 +1,39 @@
-#SMAKE
-Simple make file generator written in Rust. Takes a .c or .cpp file and generate the makefile reading its dependencies. You can also add extra arguments or choose the compiler between gcc or g++. It has a serious limitation: the dependency search is not yet recoursive and stops just for the dependecies of the target. In the future I will maybe complete the project with these feature.
+# SMAKE
 
-##INSTALLATION
-Clone the repo, cd in it and type:
+**SMAKE** is a simple yet powerful Makefile generator written in Rust. Designed for C and C++ projects, SMAKE scans your source files for dependencies and automatically generates a Makefile. You can specify additional arguments, choose between `gcc` and `g++` compilers, and customize your build setup.
 
-'cargo install smake'
+### Features
 
-then check if your $PATH is updated with where cargo installed the script. Enjoy!
+- **Automated Makefile Generation**: Quickly generate a Makefile for `.c` and `.cpp` files.
+- **Compiler Options**: Supports both `gcc` and `g++`.
+- **Extra Arguments**: Add any extra flags or arguments to customize your build process.
+- **Limitations**: Currently, SMAKE’s dependency resolution is non-recursive, analyzing only direct dependencies. Future versions may include recursive dependency analysis.
 
-##LICENSE
-Feel free to do whatever you want.
+---
+
+## Installation
+
+To install **SMAKE**, follow these steps:
+
+### Prerequisites
+Ensure that [Rust](https://www.rust-lang.org/tools/install) is installed. You’ll need Cargo, Rust’s package manager, which is included with the Rust installation.
+
+### Steps to Install
+
+1. **Clone the Repository**  
+   Open a terminal and clone the repository:
+   ```bash
+   git clone https://github.com/your-username/smake.git
+2. **Cd into smake**
+   Write 
+   ```bash 
+   cd smake
+3. **Install it**
+    Write in the terminal 
+    ```bash 
+    cargo install smake
+
+Check that the cargo bin folder is added to your $PATH !! and enjoy
+
+
+
