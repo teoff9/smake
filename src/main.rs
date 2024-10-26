@@ -43,7 +43,7 @@ fn main() -> anyhow::Result<()> {
     //write the makefile
     write_makefile(&target, &dir, &deps, args.compiler, &args.args)?;
 
-    println!(" \n => CREATED makefile in {}", dir.display());
+    println!(" => CREATED makefile in {}", dir.display());
 
     Ok(())
 }

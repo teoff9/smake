@@ -62,13 +62,9 @@ pub fn write_makefile(
         .iter()
         .map(|d| {
             if let Some(p) = &d.source {
-                format!(
-                    "{} {}",
-                    p.with_extension("o")
-                        .to_str()
-                        .expect("Can't get string from source path"),
-                    d.name.to_str().expect("Can't get deps name as str")
-                )
+                p.with_extension("o")
+                    .to_str()
+                    .expect("Can't get string from source path").to_string()
             } else {
                 d.name
                     .to_str()

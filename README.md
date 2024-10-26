@@ -23,7 +23,7 @@ Ensure that [Rust](https://www.rust-lang.org/tools/install) is installed. You’
 1. **Clone the Repository**  
    Open a terminal and clone the repository:
    ```bash
-   git clone https://github.com/your-username/smake.git
+   git clone https://github.com/teoff9/smake.git
 2. **Cd into smake**
    Write 
    ```bash 
@@ -31,7 +31,7 @@ Ensure that [Rust](https://www.rust-lang.org/tools/install) is installed. You’
 3. **Install it**
     Write in the terminal 
     ```bash 
-    cargo install
+    cargo instal
 
 Check that the cargo bin folder is added to your $PATH !! and enjoy
 
