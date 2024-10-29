@@ -98,8 +98,14 @@ pub fn write_makefile(
 
     //write the clean command
     f.write_fmt(format_args!(
-        "\nclean:\n\trm {sources_list}\n\trm {tgt_name}\n"
-    ))?;
+        "\nclean:\n\t"))?;
+    if !sources_list.is_empty() {
+        f.write_fmt(format_args!(
+            "rm {sources_list}\n\t"
+        ))?;
+    }
+    f.write_fmt(format_args!("rm {tgt_name}\n"))?;
+    
 
     Ok(())
 }
